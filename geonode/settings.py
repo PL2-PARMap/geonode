@@ -290,7 +290,7 @@ INSTALLED_APPS = (
     "pinax_theme_bootstrap_account",
     "pinax_theme_bootstrap",
     'django_forms_bootstrap',
-
+      
     # Social
     'account',
     'avatar',
@@ -303,6 +303,9 @@ INSTALLED_APPS = (
     'tastypie',
     'polymorphic',
     'guardian',
+    
+    #CAS_client
+    'djang_cas_ng',
 
 ) + GEONODE_APPS
 
@@ -396,6 +399,7 @@ MIDDLEWARE_CLASSES = (
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend',
+    'django_cas_ng.backends.CASBackend',
 )
 
 ANONYMOUS_USER_ID = -1
@@ -862,10 +866,12 @@ CELERY_DEFAULT_EXCHANGE = "default"
 CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
+
 CELERY_IMPORTS = (
     'geonode.tasks.deletion',
     'geonode.tasks.update',
     'geonode.tasks.email'
+    'geonode.tasks.users',
 )
 
 
@@ -874,6 +880,7 @@ CELERY_QUEUES = [
     Queue('cleanup', routing_key='cleanup'),
     Queue('update', routing_key='update'),
     Queue('email', routing_key='email'),
+    Queue('users',routing_key='users'),
 ]
 
 import djcelery
@@ -930,3 +937,5 @@ if 'geonode.geoserver' in INSTALLED_APPS:
     baselayers = MAP_BASELAYERS
     MAP_BASELAYERS = [LOCAL_GEOSERVER]
     MAP_BASELAYERS.extend(baselayers)
+
+    CAS_VERSION = 3
